@@ -1,0 +1,220 @@
+14/04/2026
+
+ISO Windows Server 2022
+Virtual BOX
+
+Configuração:
+4gb RAM
+4 NUCLEO
+50gb de HD - Armazenamento
+10 - ssd de 10gb
+3 placa de rede - Interna
+
+Instalação
+
+Windows Server data center (Com interface de usuário)
+
+Senha: 123@senac
+
+-------------------------------------------------
+
+Iniciando Windows Server
+Passo a Passo
+
+1- instalar os drivers - dispositivos no virtual - inserir  imagem CD do adicionais para convidado - Explorador de arquivos - este computador - virtual box - selecionar o primeiro para adicionar.
+
+2- gerenciamento de servidor - servidor local, Serviços, botão direito iniciar serviço no que esta aparecendo, pronto.
+
+3- gerenciamento de servidor - servidor local - clicar em nome - alterar- SRVregis - reiniciar
+
+4- amarrar as três placas de redes NIC - servidor local - agrupamento NIC - clicar - equipes - tarefas - nova equipe - nome- marcas as três placas - (para o virtual box -propriedades adicionais - modo de balanceamento de carga - hash de endereço(DICA nunca monte um servidor com placa de rede só)
+
+5- RAID espelhamento - gerenciamento de disco - escolher GPT (tem maior capacidade de armazenamento) - botão direito, Novo volume espelhado - Letra do disco - nome do disco - sim, colocar em dinâmico.
+
+6- se der problema, em um hd por exemplo, entrar no gerenciador de disco - clicar no disco RAID, remover espelho, adicionar um novo disco.
+
+------------------------------------------------
+15/04/2026
+
+Raid FIVE - Paridade
+
+1- No mínimo 3 HD,o tamanho tem que ser iguais de armazenamento, POnta fraco dois não pode falhar, ideal 5 hd assim dois pode queimar, quanto mais disco você aumenta sua velocidade de gravação e leitura, mas quanto mais desempenho menos segurança, e assim ao contrario.
+
+2- clicar no disco- ter no minino 3 disco, novo volume RAID-5, avançar - adicionar os 3 disco no mínimo- colocar a letra () - colocar o nome - fazer formatação(obs: nunca fazer a a formatação rápida - concluir e sim para o dinâmico.
+
+3- instalação do active directory - gerenciar - adicionar funções e recursos - próximo e próximo... - serviço de domínio active directory - instalar
+
+4- Ir na bandeira - promover este servidor a um controlador de domínio - NOME.tec - adicionar uma nova floresta - senha:123@senac - próximo... - instalar
+
+------------------------------------------------
+
+
+16/04/2026
+
+
+instalação de Windows 11 PRO na VM padrão com REDE INTERNA
+
+Instalação serviço DHCP, Serve para Distribuir IP para estações de trabalhos.
+
+DHCP
+Escopo
+IP inicial: 192.168.xx.100
+IP Final: 192.168.xx.2f00
+Exclusão - 
+Mascara - 255.255.255.0  ou /24 que significa 8 bits por 255.
+Duração - 8 dias (para aula vai ser 2 horas)
+Gateway - 192.168.xx.1
+DNS - 192.168.xx.10
+
+INSTALAÇÂO DO DHCP
+passo a passo
+
+1- Gerenciar - adicionar funções e recursos - próximo - Instalação baseada em função ou recurso - servidor DHCP - próximo... - instalar - 
+
+2- configuração DHCP - Bandeira - configuração -
+próximo - confirmar instalado
+
+3- Ferramentas - para acessar o que você instalou é sempre em ferramentas - Ferramentas - DHCP - IPV4 - Novo Escopo - avançar - exclusão (não mexer) - duração (2 horas) - avançar - Gateway 192.168.31.1 - adicionar - DNS avançar - avançar - avançar - concluído
+
+4- Usuários e computadores do active directory - regis.tec - botão direito - novo -  usuário - nome e sobrenome - senha - usuário alterar a senha no próximo logon - 
+
+comando CMD: nslookup Ex: regis.tec
+
+5- Verificar no cmd se esta no domínio - acessar o domínio - Botão Windows + pause break - configurações avançadas - nome do computador - alterar - domínio - regis.tec - colocar o login - administrador e senha 123@senac - bem vindo a regis.tec
+
+
+------------------------------------------------
+
+17/04/2026
+
+fazer  o controle de usuário - Active directory
+
+1- ferramentas - usuários e computadores do active directory - regis.tec - pasta de usuários - criar um usuário - botão direito no usuário - propriedades -   conta - horário de LOGON e Fazer LOGON em maquina especifica.
+
+
+------------------------------------------------
+22/04/2026
+
+ferramentas - usuários e computadores do active diretor - Criar um pasta organizacional -
+5 usuários - criar 3 grupos - Adicionar 2 em cada grupo
+
+escopo 
+
+grupos:
+vendas
+compras
+gerente
+
+usuários:
+Professor (Sergio Marquina): Álvaro Morte
+Tóquio (Silene Oliveira): Úrsula Corberó
+Berlim (Andrés de Fonollosa): Pedro Alonso
+Nairóbi (Ágata Jimenez): Alba Flores
+Rio (Aníbal Cortés): Miguel Herrán
+Moscou (Agustín Ramos): Paco Tous
+
+acessar o HD que nos fizemos um raid - criar 4 pasta
+PUBLICA
+VENDAS
+COMPRAS
+GERENTE
+PROJETOS
+
+1- pasta publica - conceder permissões - todos - leitura e gravação
+
+2- criar pasta vendas - propriedades - compartilhamento - avançado - nome da pasta - descrição - permissões - remover todos - adicionar - usuário de domínio - leitura e alteração - ok - 
+
+2- propriedades - segurança - usuários de domínio clicar nele e ir em avançados - desabilitar herança - dar ok - editar esse usuário de domínio - remover ele -  adicionar - o grupo que você quer (vendas) - e marcar leitura e gravação
+
+Repetir o processo com os demais grupos
+
+
+
+------------------------------------------------
+
+23/04/2026
+
+Mapeamento
+ 
+1- disco local - Windows - sysvol - sysvol - regis.tec - scripts 
+
+2- bloco de notas - 
+script para mapear as pastas pro usuário
+net use s: \\srvregis\publica
+net use i: \\srvregis\vendas
+net use g: \\srvregis\compras
+net use h: \\srvregis\gerentes
+net use j: \\srvregis\atendentes
+
+o star inicia o caminho que você colocar ali sites e aplicativos do Windows
+
+star https:\\www.senac.br
+
+
+selecionar os usuários das duas pastas - propriedades - perfil - script logon - nome - compras.cmd (obs:esse nome (.cmd) é o mesmo que você coloca quando salva o arquivo na pasta de script no sysvol por exemplo, compras.cmd
+
+Esconder pasta dos usuários - cada usuário ve so a sua pasta
+
+3- AD - painel - serviços de arquivo e armazenamento - compartilhamentos - selecionar o a pasta de compartilhamento - botão direito - propriedades - configuração - habilitar - enumeração baseada em acesso
+
+4- pasta publica - criar as pastas que você quer deixar os usuário ver - propriedades - segurança- desabilitar herança - adicionar ou remover os grupos que você que tem=nha acesso - ok
+
+
+-----------------------------------------------------------------
+
+24/04/2026
+
+
+Criar pasta dos users
+
+1- criar uma pasta HOME - propriedades -compartilhamentos - avançado - permissões - remover (TODOS) - Adicionar usuários de domínio - marcar Leitura e gravação - ok
+
+2- segurança - desabilitar herança - remover usuário de domínio - ir em avançado - adicionar usuário - selecionar uma entidade de segurança - usuario\usuario - em aplicável, esta pasta, somente pasta - marca leitura e modificação e dar o ok
+
+3- pegar o caminho da pasta HOME (\\SRVREGIS\VilaHome$\%username%) - ir em AD - usuários - selecionar todos - propriedades - perfil - caminho da pasta - letra Z - COLAR o CAMINHO - \\SRVREGIS\VilaHome$\%username%
+
+
+4- verificação - ir pasta dos usuário - propriedades - segurança - tem que estar o nome do usuário adicionado, significa que esta ok
+
+5- painel - serviçoes de arquivo e armazenamento -  compartilhamentos - Selecionar  a pasta que você quer - propriedades - configuração - habilitar enumeração baseada em acesso.
+
+-----------------------------------------------------------------
+
+27/04/2026
+
+vamos adicionar mais um recurso no nosso server
+
+Instalação
+1- Gerenciar - adicionar recursos - próximo - próximo - próximo - serviços de arquivo e armazenamento - setinha - setinha de novo - gerenciador de recursos do servidor de  arquivos - adicionar - próximo - instalar 
+
+2- Ferramentas - gerenciador de recursos de servidor de arquivos - Gereciamento de cota - modelo de cota - criar modelo de cota - nome - limite de espaço - cota fixa 
+
+para aplicar a cota 
+
+3- ir em cota - criar uma cota - colocar o caminho - selecionar a cota criada - dar ok
+
+--------------------------------------------
+Dica
+
+Quando for criar um usuário que faz parte de grupos, como vendas, comprador, gerentes etc, o ideal é você criar um usuário base como vendedor e fazer toda a configuração e replicar isso com os demais setores assim você pode copiar o usuário base do setor especifico e já vai estar todo configurado.
+
+--------------------------------------------
+como colocar cotas nas subpastas
+
+1- Criar cota - achar a pasta que tem as subpastas - marcar a caixinha - aplicar o modelo e criar cotas em subpastas novas e existentes automaticamente - selecionar o limite de cota - criar.
+
+
+--------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
