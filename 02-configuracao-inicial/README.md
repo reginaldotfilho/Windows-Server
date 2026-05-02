@@ -2,7 +2,23 @@
 
 ## 📌 Objetivo
 
-Realizar as configurações iniciais do servidor após a instalação, preparando o ambiente para a implementação de serviços como Active Directory, DHCP e File Server.
+Realizar as configurações iniciais do servidor após a instalação, preparando o ambiente para a implementação de serviços como:
+
+* Active Directory (AD DS)
+* DHCP
+* File Server
+* Integração com estação cliente
+
+---
+
+## 🧪 Contexto do Ambiente
+
+Este servidor faz parte de um ambiente virtualizado contendo:
+
+* 🖥️ Servidor (Windows Server 2022)
+* 💻 Estação cliente (Windows 10/11)
+
+📌 Ambas as máquinas estão conectadas à mesma rede interna (**REDE-LAB**), permitindo comunicação e simulação de um ambiente corporativo.
 
 ---
 
@@ -10,7 +26,7 @@ Realizar as configurações iniciais do servidor após a instalação, preparand
 
 O **Server Manager** é a principal ferramenta de administração do Windows Server.
 
-* Ele é aberto automaticamente ao iniciar o sistema
+* É aberto automaticamente ao iniciar o sistema
 * Caso não abra:
 
   * Menu Iniciar → Server Manager
@@ -25,10 +41,9 @@ O **Server Manager** é a principal ferramenta de administração do Windows Ser
 2. Verificar o status dos serviços
 3. Caso algum serviço esteja parado:
 
-   * Clicar com o botão direito
-   * Selecionar **Iniciar**
+   * Botão direito → **Iniciar**
 
-📌 Garantir que todos os serviços essenciais estejam em execução
+📌 Garantir que todos os serviços essenciais estejam em execução antes de instalar novas funções.
 
 ---
 
@@ -36,7 +51,7 @@ O **Server Manager** é a principal ferramenta de administração do Windows Ser
 
 Padronizar o nome do servidor é uma boa prática em ambientes corporativos.
 
-### Passo a passo:
+### 🚀 Passo a passo:
 
 1. Acessar:
 
@@ -47,7 +62,7 @@ Padronizar o nome do servidor é uma boa prática em ambientes corporativos.
 3. Clicar em **Alterar**
 4. Definir o novo nome:
 
-```
+```bash id="8u3y1o"
 SRVREGIS
 ```
 
@@ -58,12 +73,14 @@ SRVREGIS
 
 ## 🌐 Configuração de Rede (NIC Teaming)
 
-O agrupamento de placas de rede aumenta:
+O agrupamento de placas de rede permite:
 
-* Disponibilidade (redundância)
-* Desempenho
+* Maior disponibilidade (redundância)
+* Melhor desempenho
 
-### Passo a passo:
+---
+
+### 🚀 Passo a passo:
 
 1. Acessar:
 
@@ -71,13 +88,13 @@ O agrupamento de placas de rede aumenta:
 2. Localizar:
 
    * **NIC Teaming (Agrupamento de NIC)**
-3. Clicar em **Desabilitado** → abrir configurações
-4. Em **Tarefas**, selecionar:
+3. Clicar em **Desabilitado**
+4. Em **Tarefas** → selecionar:
 
    * **Nova Equipe**
 5. Definir:
 
-   * Nome da equipe (ex: TEAM-SRV)
+   * Nome da equipe (ex: `TEAM-SRV`)
 6. Selecionar as **3 placas de rede**
 7. Configurar:
 
@@ -88,25 +105,62 @@ O agrupamento de placas de rede aumenta:
 
 ---
 
+## 📡 Verificação de Rede
+
+Após a configuração, validar conectividade:
+
+### ✔ Verificar IP do servidor
+
+```cmd id="9dhljp"
+ipconfig
+```
+
+---
+
+### ✔ Testar comunicação com cliente
+
+```cmd id="m3lmx7"
+ping 192.168.x.x
+```
+
+📌 (IP da estação cliente)
+
+---
+
 ## ✅ Resultado Esperado
 
 * Servidor com nome padronizado (**SRVREGIS**)
 * Serviços ativos e funcionando
-* Placas de rede agrupadas (NIC Teaming configurado)
+* NIC Teaming configurado
+* Comunicação de rede funcional
 
 ---
 
 ## 📌 Boas Práticas
 
-* Nunca utilizar servidor com apenas uma placa de rede em ambiente corporativo
-* Sempre padronizar nomes de servidores (ex: SRV + função ou nome)
+* Padronizar nomes de servidores (ex: SRV + função)
 * Validar serviços antes de instalar novas funções
+* Utilizar múltiplas interfaces de rede quando possível
 
 ---
 
 ## ⚠️ Observações
 
-* Após renomear o servidor, o reboot é obrigatório
-* O NIC Teaming pode variar dependendo do ambiente virtual
+* Após renomear o servidor, o reinício é obrigatório
+* O NIC Teaming pode variar conforme o ambiente virtual
+* A comunicação com o cliente depende da configuração correta da rede interna
 
 ---
+
+## 🧠 Visão Profissional
+
+A configuração inicial define a base de estabilidade do servidor.
+
+👉 Um erro nessa etapa pode impactar diretamente:
+
+* Active Directory
+* DHCP
+* Autenticação de usuários
+* Comunicação de rede
+
+📌 Por isso, essa etapa é crítica em qualquer ambiente corporativo.
