@@ -6,6 +6,17 @@ Instalar e configurar o Active Directory Domain Services (AD DS), promovendo o s
 
 ---
 
+## 🧪 Contexto do Ambiente
+
+Este serviço foi implementado em um ambiente virtualizado contendo:
+
+* 🖥️ Servidor (Windows Server 2022)
+* 💻 Estação cliente (Windows 10/11)
+
+📌 Ambas as máquinas estão conectadas à mesma rede interna (**REDE-LAB**), permitindo comunicação e autenticação no domínio.
+
+---
+
 ## 🧠 Conceito
 
 O Active Directory é um serviço de diretório que permite:
@@ -56,15 +67,16 @@ Após a instalação:
 * **Nova floresta:** Sim
 * **Nome do domínio:**
 
-  ```
-  regis.tec
-  ```
+```bash
+regis.tec
+```
+
 * **Nível funcional:** padrão
 * **Senha do modo de restauração (DSRM):**
 
-  ```
-  123@senac
-  ```
+```bash
+123@senac
+```
 
 ---
 
@@ -86,51 +98,73 @@ Após a instalação:
 
 ---
 
-## 🔐 Teste de Funcionamento
+## 🔐 Testes de Funcionamento
 
-Após a instalação:
-
-### ✔ Verificar domínio
-
-1. Abrir:
-
-   * Prompt de Comando (CMD)
-2. Executar:
+### ✔ Teste de DNS (Servidor ou Cliente)
 
 ```cmd
 nslookup regis.tec
 ```
 
+📌 Deve retornar o IP do servidor.
+
 ---
 
-### ✔ Ingressar máquina no domínio
+### ✔ Teste de comunicação
+
+```cmd
+ping 192.168.x.x
+```
+
+(IP do servidor)
+
+---
+
+### ✔ Ingresso da estação no domínio
 
 1. Pressionar:
 
    * `Windows + Pause Break`
 2. Acessar:
 
-   * Configurações avançadas
+   * Configurações avançadas do sistema
 3. Alterar:
 
    * Nome do computador → Domínio
 4. Informar:
 
-   * `regis.tec`
+```bash
+regis.tec
+```
+
 5. Inserir credenciais:
 
    * Usuário: Administrator
    * Senha: 123@senac
-6. Reiniciar máquina
+6. Reiniciar a máquina
+
+---
+
+### ✔ Login com usuário do domínio
+
+1. Tela de login
+2. Selecionar:
+
+   * Outro usuário
+3. Informar:
+
+```bash
+regis\usuario
+```
 
 ---
 
 ## 📌 Boas Práticas
 
-* Utilizar nomes de domínio internos padronizados
-* Documentar estrutura do domínio
-* Separar usuários por setores futuramente (OUs)
-* Manter controle de credenciais administrativas
+* Utilizar nomes de domínio padronizados
+* Criar Unidades Organizacionais (OUs) por setor
+* Manter controle de usuários e permissões
+* Evitar uso de contas administrativas no dia a dia
 
 ---
 
@@ -138,7 +172,8 @@ nslookup regis.tec
 
 * O DNS é instalado automaticamente com o AD
 * O servidor passa a ser responsável pela autenticação da rede
-* Qualquer falha no DC impacta toda a rede
+* O cliente deve apontar o DNS para o servidor
+* Qualquer falha no controlador de domínio impacta toda a rede
 
 ---
 
