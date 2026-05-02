@@ -1,6 +1,6 @@
 # 🖥️ Windows Server 2022 Lab — Active Directory, DHCP & File Services
 
-> 📌 Projeto prático de laboratório focado na implementação de uma infraestrutura corporativa utilizando Windows Server.
+> 📌 Projeto prático de laboratório focado na implementação de uma infraestrutura corporativa utilizando virtualização.
 
 ---
 
@@ -16,7 +16,7 @@ Este repositório documenta a criação de um ambiente completo de rede corporat
 * Scripts de logon e mapeamento de rede
 * Gerenciamento de cotas de armazenamento
 
-💡 Todo o processo foi realizado de forma prática, simulando um ambiente real de empresa.
+💡 Todo o ambiente foi construído de forma prática, simulando um cenário real de empresa com servidor e estação cliente integrados.
 
 ---
 
@@ -35,27 +35,49 @@ Desenvolver habilidades práticas em:
 ## 🏗️ Arquitetura do Ambiente
 
 ```bash
-[ CLIENTE WINDOWS 11 ]
-          │
-          ▼
-[ DHCP + DNS + AD ]
-          │
-          ▼
+[ CLIENTE WINDOWS 10/11 ]
+        │
+        ▼
+[ AD DS + DNS + DHCP ]
+        │
+        ▼
 [ FILE SERVER + RAID ]
 ```
 
 ---
 
-## ⚙️ Ambiente de Laboratório
+## 🧪 Ambiente de Laboratório
 
-| Recurso       | Configuração        |
-| ------------- | ------------------- |
-| Virtualização | VirtualBox          |
-| Sistema       | Windows Server 2022 |
-| RAM           | 4GB                 |
-| CPU           | 4 vCPUs             |
-| Armazenamento | 50GB                |
-| Rede          | 3 NICs (Teaming)    |
+Todo o ambiente foi virtualizado utilizando o VirtualBox.
+
+### 🖥️ Servidor (Windows Server 2022)
+
+| Recurso       | Configuração               |
+| ------------- | -------------------------- |
+| Função        | AD DS + DHCP + File Server |
+| RAM           | 4GB                        |
+| CPU           | 4 vCPUs                    |
+| Armazenamento | 50GB                       |
+| Rede          | 3 NICs (NIC Teaming)       |
+
+---
+
+### 💻 Estação de Trabalho (Windows 10/11 Pro)
+
+| Recurso    | Configuração                                |
+| ---------- | ------------------------------------------- |
+| Função     | Cliente do domínio                          |
+| Integração | Active Directory                            |
+| IP         | Via DHCP                                    |
+| Testes     | Login, acesso a rede, validação de serviços |
+
+---
+
+### 🌐 Rede
+
+* Tipo: Rede interna (VirtualBox)
+* Comunicação entre servidor e cliente
+* Ambiente isolado simulando rede corporativa
 
 ---
 
@@ -73,6 +95,7 @@ Desenvolver habilidades práticas em:
  ┣ 📁 08-mapeamento-rede
  ┣ 📁 09-pastas-home
  ┣ 📁 10-cotas
+ ┣ 📁 11-estacao-cliente-windows
  ┗ README.md
 ```
 
@@ -124,13 +147,13 @@ Desenvolver habilidades práticas em:
 * Controle de acesso baseado em grupos
 * Permissões NTFS configuradas corretamente
 * Enumeração baseada em acesso (ABE)
-* Restrição de login por horário/máquina
+* Restrição de login por horário e máquina
 
 ---
 
 ## 🧪 Testes Realizados
 
-* Ingresso de máquina no domínio
+* Ingresso da estação no domínio
 * Autenticação de usuários
 * Resolução de nomes (DNS / nslookup)
 * Aplicação de permissões
@@ -185,7 +208,7 @@ Este projeto demonstra habilidades práticas essenciais para:
 
 ## 🤝 Contribuição
 
-Este é um projeto de estudo, mas sugestões são bem-vindas!
+Este é um projeto de estudo, mas sugestões são bem-vindas.
 
 ---
 
