@@ -205,11 +205,29 @@ como colocar cotas nas subpastas
 
 
 --------------------------------------------
+28/04/2026
 
 
 
+Triagem
 
+1- Ferramentas - gerenciador de recursos de servidor de arquivos - gerenciamento de triagem de arquivo - modelos de triagem de arquivo- criar triagem-  Nome do modelo - selecionar os arquivos que você quer bloquear - nosso exemplo ( Texto e office são os únicos que funciona) - ok
 
+2- acessar agora triagem de arquivos - criar triagem de arquivo - colocar o caminho da pasta - selecionar a triagem que você ou já existente -  a  criar
+
+3- criar os arquivos no cmd - 
+
+Comando no CMD para  criar arquivos para nos testar na triagem,
+
+c:
+cd users
+cd naruto
+cd desktop
+copy senac.txt senac.xxx
+
+Criar um segundo adm no AD
+
+ir em AD - pastar users - botão direito - copiar o usuário adm - e fazer um novo 
 
 
 
