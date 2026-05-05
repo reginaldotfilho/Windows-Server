@@ -1,0 +1,517 @@
+“Implementei a instalação automatizada de software via GPO utilizando script PowerShell, com download direto da fonte oficial e execução na inicialização das máquinas.”
+
+📄 📌 OBJETIVO
+
+Instalar automaticamente o Google Chrome nos computadores do domínio usando:
+
+👉 Script PowerShell + GPO
+
+🧱 🗂️ ETAPA 1 — CRIAR ESTRUTURA NO SERVIDOR
+📍 1.1 Criar unidade (se já tiver, só usar)
+
+Exemplo:
+
+D:\
+📍 1.2 Criar pastas
+D:\Empresa
+D:\Scripts
+D:\Instaladores
+📡 📁 ETAPA 2 — COMPARTILHAR A PASTA SCRIPTS
+📍 2.1 Clique com botão direito em:
+D:\Scripts
+📍 2.2 Vá em:
+Propriedades > Compartilhamento
+📍 2.3 Clique:
+Compartilhamento Avançado
+
+✔ Marque:
+
+Compartilhar esta pasta
+📍 2.4 Nome do compartilhamento:
+Scripts
+📍 2.5 Permissões (botão "Permissões")
+
+Remova "Todos" e adicione:
+
+Domain Computers
+
+Permissão:
+
+Leitura
+🔐 ETAPA 3 — PERMISSÕES DE SEGURANÇA
+
+Aba Segurança:
+
+Adicione:
+
+Domain Computers
+
+Permissões:
+✔ Ler e executar
+✔ Leitura
+
+📄 💻 ETAPA 4 — CRIAR SCRIPT POWERSHELL
+📍 4.1 Abrir bloco de notas
+Windows + R → notepad
+📍 4.2 Código do script
+$url = "https://dl.google.com/chrome/install/GoogleChromeStandaloneEnterprise64.msi"
+$destino = "C:\Temp\chrome.msi"
+
+New-Item -ItemType Directory -Path "C:\Temp" -Force
+
+Invoke-WebRequest -Uri $url -OutFile $destino
+
+Start-Process "msiexec.exe" -ArgumentList "/i $destino /quiet /norestart" -Wait
+📍 4.3 Salvar
+Nome:
+instalar_chrome.ps1
+Tipo:
+Todos os arquivos (*.*)
+Local:
+D:\Scripts
+🌐 ETAPA 5 — CAMINHO DE REDE (IMPORTANTE)
+
+Use isso na GPO:
+
+\\SERVIDOR\Scripts\instalar_chrome.ps1
+🧱 ETAPA 6 — CRIAR GPO
+📍 6.1 Abrir
+Windows + R → gpmc.msc
+📍 6.2 Criar
+
+Nome:
+
+GPO_Instalar_Chrome_PS
+✏️ ETAPA 7 — EDITAR GPO
+📍 Caminho completo:
+Configuração do Computador
+> Políticas
+> Configurações do Windows
+> Scripts (Inicialização/Desligamento)
+📍 7.1 Clique:
+Inicialização
+📍 7.2 Clique:
+Adicionar
+📍 7.3 Clique:
+Procurar
+
+👉 Copie o script para a pasta da GPO OU referencie ele
+
+⚠️ ETAPA 8 — LIBERAR POWERSHELL
+📍 Caminho:
+Configuração do Computador
+> Políticas
+> Modelos Administrativos
+> Componentes do Windows
+> Windows PowerShell
+📍 Ativar:
+Permitir execução de scripts → Habilitado
+🔗 ETAPA 9 — VINCULAR GPO
+Vá na OU dos computadores
+Clique:
+Vincular um GPO existente
+Escolha:
+GPO_Instalar_Chrome_PS
+🔄 ETAPA 10 — ATUALIZAR
+
+No cliente:
+
+gpupdate /force
+
+Depois:
+
+👉 Reiniciar o computador
+
+⏳ RESULTADO FINAL
+PC liga
+↓
+GPO executa
+↓
+Script roda
+↓
+Baixa Chrome
+↓
+Instala automaticamente
+✅ ETAPA 11 — TESTE
+
+✔ Reinicia o PC
+✔ Verifica se o Chrome instalou
+
+🧪 TESTE AVANÇADO
+Desinstala o Chrome
+Reinicia
+
+👉 Ele instala de novo = sucesso
+
+
+“Implementei a instalação automatizada de software via GPO utilizando script PowerShell, com download direto da fonte oficial e execução na inicialização das máquinas.”
+
+⚠️ ERROS QUE DERRUBAM TUDO
+
+❌ Não compartilhar a pasta
+❌ Permissão errada
+❌ Script salvo como .txt
+❌ Não liberar PowerShell
+❌ Sem internet
+
+
+-----------------------------------------------------------------------------------------------
+
+
+📄 📌 OBJETIVO
+
+Instalar automaticamente o Google Chrome em computadores do domínio sem internet, usando GPO + arquivo .msi.
+
+🌐 📥 ETAPA 1 — BAIXAR O INSTALADOR (EM OUTRO PC COM INTERNET)
+
+👉 Acesse:
+
+Google Chrome Enterprise (site oficial)
+📍 Procure por:
+Chrome Enterprise MSI
+📍 Baixe:
+
+Versão:
+
+64-bit MSI
+📍 Nome do arquivo:
+GoogleChromeStandaloneEnterprise64.msi
+
+👉 Salve e copie para um pendrive
+
+📦 📁 ETAPA 2 — LEVAR PARA O SERVIDOR
+
+No servidor:
+
+📍 Criar estrutura:
+D:\Instaladores
+D:\Instaladores\Chrome
+📍 Copiar o arquivo:
+D:\Instaladores\Chrome\GoogleChromeStandaloneEnterprise64.msi
+📡 🌐 ETAPA 3 — COMPARTILHAR A PASTA
+📍 Clique com botão direito em:
+D:\Instaladores
+📍 Vá em:
+Propriedades > Compartilhamento
+📍 Clique:
+Compartilhamento Avançado
+
+✔ Marque:
+
+Compartilhar esta pasta
+
+Nome:
+
+Instaladores
+🔐 Permissões (IMPORTANTE)
+
+Clique em:
+
+Permissões
+
+👉 Remova "Todos"
+
+👉 Adicione:
+
+Domain Computers
+
+Permissão:
+
+Leitura
+🔐 📂 ETAPA 4 — PERMISSÕES DE SEGURANÇA
+
+Aba:
+
+Segurança
+
+Adicione:
+
+Domain Computers
+
+✔ Marque:
+
+Leitura
+Ler e executar
+🌐 📍 ETAPA 5 — CAMINHO DE REDE
+
+Você vai usar:
+
+\\SERVIDOR\Instaladores\Chrome\GoogleChromeStandaloneEnterprise64.msi
+
+👉 (troque SERVIDOR pelo nome real)
+
+🧱 ⚙️ ETAPA 6 — CRIAR GPO
+📍 Abrir:
+Windows + R → gpmc.msc
+📍 Criar nova GPO:
+
+Nome:
+
+GPO_Instalar_Chrome
+✏️ 🛠️ ETAPA 7 — EDITAR GPO
+📍 Caminho completo:
+Configuração do Computador
+> Políticas
+> Configurações de Software
+> Instalação de Software
+📍 Adicionar pacote:
+Botão direito em:
+Instalação de Software
+Clique:
+Novo > Pacote
+Cole:
+\\SERVIDOR\Instaladores\Chrome\GoogleChromeStandaloneEnterprise64.msi
+📍 Tipo:
+
+👉 Escolha:
+
+Atribuído (Assigned)
+🔗 📂 ETAPA 8 — VINCULAR GPO
+📍 Vá na OU dos computadores
+
+Exemplo:
+
+Computadores
+📍 Clique com botão direito:
+Vincular um GPO existente
+📍 Selecione:
+GPO_Instalar_Chrome
+🔄 💻 ETAPA 9 — APLICAR NO CLIENTE
+
+No computador cliente:
+
+gpupdate /force
+
+👉 Depois:
+
+✔ Reiniciar o computador
+
+⏳ 📦 RESULTADO
+PC liga
+↓
+GPO aplica
+↓
+Chrome instala automaticamente
+✅ 🧪 ETAPA 10 — TESTE
+
+✔ Reinicia o PC
+✔ Faz login
+✔ Verifica se o Chrome está instalado
+
+🧪 TESTE AVANÇADO
+Desinstala o Chrome
+Reinicia
+
+👉 Ele instala de novo = funcionando
+
+⚠️ ❌ ERROS MAIS COMUNS
+
+❌ Usar caminho C:\
+❌ Não compartilhar pasta
+❌ Permissão errada
+❌ Usar .exe
+❌ GPO na OU errada
+
+🗣️ 💬 
+
+“Implementei a instalação automatizada de software via GPO utilizando pacote MSI armazenado em compartilhamento de rede, garantindo padronização mesmo em ambiente sem acesso à internet.”
+
+
+
+------------------------------------------------------------------------------------------------
+
+
+
+
+📄 📌 GPO: Bloquear uso de pendrive (USB)
+🎯 Objetivo
+
+Impedir que usuários utilizem dispositivos USB de armazenamento (pendrive, HD externo), aumentando a segurança dos dados da empresa.
+
+🧠 📚 Conceito (pra sua apresentação)
+
+Essa política bloqueia:
+
+leitura de arquivos via USB
+gravação de arquivos via USB
+
+👉 Evita:
+
+vazamento de dados
+vírus/malware via pendrive
+🚀 ⚙️ PASSO A PASSO COMPLETO
+🧱 ETAPA 1 — Abrir o gerenciamento de GPO
+Pressione:
+Windows + R
+Digite:
+gpmc.msc
+Pressione Enter
+🧱 ETAPA 2 — Criar nova GPO
+Vá em:
+Objetos de Política de Grupo
+Botão direito:
+Novo
+Nome:
+GPO_Bloqueio_USB
+✏️ ETAPA 3 — Editar a GPO
+Botão direito na GPO
+Clique:
+Editar
+📍 ETAPA 4 — Caminho completo (em português)
+Configuração do Computador
+> Políticas
+> Modelos Administrativos
+> Sistema
+> Acesso a Armazenamento Removível
+🔒 ETAPA 5 — Bloquear USB
+
+Agora você vai configurar:
+
+🔹 1. Bloquear leitura
+
+Clique em:
+
+Discos removíveis: negar acesso de leitura
+
+👉 Marque:
+
+Habilitado
+🔹 2. Bloquear gravação
+
+Clique em:
+
+Discos removíveis: negar acesso de gravação
+
+👉 Marque:
+
+Habilitado
+🔹 3. (Opcional, mais forte) Bloquear tudo
+Todas as classes de armazenamento removível: negar todo acesso
+
+👉 Habilitado
+
+🔗 ETAPA 6 — Vincular a GPO
+Vá na OU dos computadores
+Botão direito:
+Vincular um GPO existente
+Escolha:
+GPO_Bloqueio_USB
+🔄 ETAPA 7 — Aplicar
+
+No computador cliente:
+
+gpupdate /force
+
+👉 Reinicie o PC
+
+⏳ RESULTADO
+Usuário conecta pendrive
+↓
+Sistema bloqueia acesso
+↓
+Não consegue abrir nem copiar arquivos
+✅ TESTE
+
+✔ Conecte um pendrive
+✔ Tente abrir
+
+👉 Deve aparecer erro de acesso negado
+
+⚠️ ERROS COMUNS
+
+❌ Vincular na OU errada
+❌ Não reiniciar
+❌ Testar com usuário admin (às vezes ignora política)
+
+🗣️ 💬 “Implementei política de segurança para bloqueio de dispositivos USB, impedindo leitura e gravação de dados em mídias removíveis, reduzindo riscos de vazamento e infecção por malware.”
+
+------------------------------------------------------------------------------------------------
+
+
+
+📄 📌 GPO: Mensagem de aviso antes do login (banner corporativo)
+
+Usando o Windows Server
+
+🎯 Objetivo
+
+Exibir uma mensagem obrigatória antes do usuário fazer login.
+
+👉 Muito usado para:
+
+aviso legal
+política de uso
+segurança da informação
+🧠 💡 Conceito
+
+Antes de digitar usuário e senha, aparece um aviso tipo:
+
+“Este computador é de uso corporativo. Acesso monitorado.”
+
+🚀 ⚙️ PASSO A PASSO COMPLETO
+🧱 ETAPA 1 — Abrir GPO
+Windows + R
+gpmc.msc
+🧱 ETAPA 2 — Criar GPO
+
+Nome:
+
+GPO_Banner_Login
+✏️ ETAPA 3 — Editar GPO
+📍 Caminho completo:
+Configuração do Computador
+> Políticas
+> Configurações do Windows
+> Configurações de Segurança
+> Políticas Locais
+> Opções de Segurança
+📝 ETAPA 4 — Configurar mensagem
+
+Você vai configurar DUAS opções:
+
+🔹 1. Título da mensagem
+
+Clique em:
+
+Login interativo: título da mensagem para usuários que tentam fazer logon
+
+Exemplo:
+
+Aviso de Segurança
+🔹 2. Texto da mensagem
+
+Clique em:
+
+Login interativo: texto da mensagem para usuários que tentam fazer logon
+
+Exemplo:
+
+Este computador é de uso exclusivo da empresa.
+Todas as atividades são monitoradas.
+O uso indevido pode resultar em penalidades.
+🔗 ETAPA 5 — Vincular GPO
+
+Na OU dos computadores:
+
+Vincular um GPO existente
+🔄 ETAPA 6 — Aplicar
+gpupdate /force
+
+👉 Reinicie o PC
+
+⏳ RESULTADO
+PC liga
+↓
+Antes do login aparece o aviso
+↓
+Usuário precisa clicar OK
+↓
+Depois entra no sistema
+✅ TESTE
+
+✔ Reinicia o computador
+✔ Verifica se aparece o aviso antes do login
+
+🗣️ 💬
+
+“Implementei um banner de login via GPO para exibir avisos de segurança e políticas de uso antes da autenticação do usuário.”
