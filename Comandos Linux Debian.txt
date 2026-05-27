@@ -1,0 +1,58 @@
+COMANDOS LINUX DEBIAN
+
+
+Usuário: root
+senha: 123@senac
+
+COMANDO PARA DESLIGAR O SERVIDOR
+shutdown -h now
+
+LIMPAR A TELA
+clear
+
+ONDE EU ESTOU
+pwd
+
+DESLOGAR
+exit
+
+
+MUDA O DIRETORIO
+cd /
+
+LISTA ARQUIVOS DE DIRETORIOS
+ls
+
+DIRETORIO PARA CONFIGURAR O SERVIDOR
+cd etc
+
+VOLTAR UM NIVEL
+cd ..
+
+VOLTAR PARA O DIRETORIO ROOT
+cd
+
+LISTA OS ULTIMOS 1000 COMANDOS DIGITADOS
+history
+
+SERVE PARA EXIBIR A DATA E HORA 
+date
+
+PARA COMPLETAR UM COMANDO
+TECLA tab
+
+UM DIRETORIO QUE VOCE TEM INFORMAÇôes do HARDWARE
+
+cd /proc
+
+_______________________________________________________-------------------------------------------------------
+
+SITE EM ESPECIALIZADO EM DEBIAN
+www.linuxtutorial.com.br
+
+CURSO LINUX SERVER
+AULA COMANDOS BASICOS DE LINUX
+
+-------------------------------------------------------_______________________________________________________
+
+

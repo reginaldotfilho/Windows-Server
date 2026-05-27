@@ -1,0 +1,167 @@
+Linux Server: NAT - Firewall - bloqueio de sites e redes sociais 
+
+Pré requisito: Ter instalado o Debian com 2 interfaces de rede
+
+Passo 1) Configuração da rede >>>>>>>>>>>>>>>>>>>>>>>>>>
+
+cd /etc/network
+#fazer uma cópia de segurança do arquivo interfaces
+cp interfaces interfaces.bkp
+
+Verificar as interfaces de rede
+lspci
+ip a
+
+Editar o arquivo interfaces para configurar a rede
+nano interfaces (atenção! Precisa estar dentro de /etc/network)
+
+Acrescentar no script a 2ª interface de rede com ip fixo
+
+#LAN
+allow-hotplug enp0s8
+iface enp0s8 inet static
+address ip/máscara (ex: 192.168.100.1/24)
+
+Salvar e sair
+Reiniciar o servidor:
+systemctl restart networking
+
+Testar fazendo um ping do Windows server ao gateway
+(ip configurado na placa enp0s8)
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+Passo 2) NAT >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+- Ativação do módulo NAT
+sysctl --system (verifica as regras do módulo netfilter)
+cd /etc/sysctl.d
+nano sysctl.conf
+
+#NAT
+net.ipv4.ip_forward = 1
+
+(salvar)
+sysctl --system
+
+- Criação da tabela no firewall
+systemctl status nftables (verificar o status do firewall)
+
+Iniciar o firewall e hablitar para inicialização junto com o servidor:
+systemctl start nftables
+systemctl enable nftables
+
+editar o arquivo de configuração do firewall
+
+nft list ruleset (verifica as regras de firewall)
+cd /etc
+ls nft*
+
+cp nftables.conf nftables.conf.bkp
+
+nano nftables.conf
+(Atenção! Adicionar ao final do script a tabela:)
+table ip nat {
+  chain postrouting {
+    type nat hook postrouting priority 100;
+    policy accept;
+    oif "enp0s3" masquerade;
+  }
+}
+
+(salvar)
+reiniciar o firewall
+systemctl restart nftables
+systemctl status nftables
+nft list ruleset
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+Passo 3) DNS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+apt install dnsmasq
+
+systemctl status dnsmasq (verificar status do servidor)
+cd /etc
+(renomear o arquivo dnsmasq.conf)
+mv dnsmasq.conf dnsmasq.conf.bkp
+
+(recriar o arquivo)
+nano dnsmasq.conf
+#LAN
+interface=enp0s8
+bind-interfaces
+
+#DNS
+listen-address=192.168.100.1
+server=8.8.8.8
+server=8.8.4.4
+cache-size=1000
+
+salvar, sair e reiniciar o serviço
+systemctl restart dnsmasq
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+Passo 4) Bloqueio de sites e redes sociais >>>>>>
+
+Bloqueio por DNS (lista negra)
+
+cd /etc/dnsmasq.d
+nano blacklist.conf
+
+#Lista negra
+address=/netflix.com/0.0.0.0
+address=/facebook.com/0.0.0.0
+
+salvar e sair do vim
+
+cd /etc
+vim dnsmasq.conf
+
+No script adicionar as seguintes linhas:
+
+#Blacklist
+domain-needed
+conf-file=/etc/dnsmasq.d/blacklist.conf
+
+(SALVAR, SAIR)
+systemctl restart dnsmasq
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+Passo 5) Firewall >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+"O melhor firewall libera apenas o que é necessário"
+
+table inet filter {
+	chain input {
+	type filter hook input priority filter;
+	policy drop; #(negar tudo)
+	iif "lo" accept; #(liberar loopback)
+	ct state established,related accept; #(relação de confiança, lembrar do porteiro do prédio)
+	iif "enp0s8" ip protocol icmp icmp type echo-request accept;
+	}
+}
+
+nft -f /etc/nftables.conf (incluir a regra sem reiniciar o serviço)
+nft list ruleset (verificar as regras do firewall)
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+
+Monitoramento do servidor com netdata
+
+Download de um script para instalação automatizada
+
+wget https://my-netdata.io/kickstart.sh
+
+# Adicionar permissão de execução a este script
+chmod +x
+
+# Executar o script
+./kickstart.sh
+
+
